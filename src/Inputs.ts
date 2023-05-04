@@ -6,6 +6,7 @@ import {Artifact} from './Artifact';
 
 export interface Inputs {
     readonly allowUpdates: boolean
+    readonly apiBaseUrl: string
     readonly artifactErrorsFailBuild: boolean
     readonly artifacts: Artifact[]
     readonly commit?: string
@@ -63,6 +64,11 @@ export class CoreInputs implements Inputs {
     get artifactErrorsFailBuild(): boolean {
         const allow = core.getInput('artifactErrorsFailBuild')
         return allow == 'true'
+    }
+
+    get apiBaseUrl(): string {
+        const apiBaseUrl = core.getInput('apiBaseURL');
+        return apiBaseUrl;
     }
 
     private get body(): string | undefined {

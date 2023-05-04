@@ -725,6 +725,10 @@ class CoreInputs {
         const allow = core.getInput('artifactErrorsFailBuild');
         return allow == 'true';
     }
+    get apiBaseUrl() {
+        const apiBaseUrl = core.getInput('apiBaseURL');
+        return apiBaseUrl;
+    }
     get body() {
         const body = core.getInput('body');
         if (body) {
@@ -1140,9 +1144,10 @@ function run() {
 function createAction() {
     const token = core.getInput('token');
     const context = github.context;
-    const git = github.getOctokit(token);
     const globber = new ArtifactGlobber_1.FileArtifactGlobber();
     const inputs = new Inputs_1.CoreInputs(globber, context);
+    const octoOptions = inputs.apiBaseUrl ? { baseUrl: inputs.apiBaseUrl } : {};
+    const git = github.getOctokit(token, octoOptions);
     const outputs = new Outputs_1.CoreOutputs();
     const releases = new Releases_1.GithubReleases(inputs, git);
     const skipper = new ActionSkipper_1.ReleaseActionSkipper(inputs.skipIfReleaseExists, releases, inputs.tag);

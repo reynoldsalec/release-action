@@ -23,10 +23,11 @@ async function run() {
 function createAction(): Action {
     const token = core.getInput('token')
     const context = github.context
-    const git = github.getOctokit(token)
     const globber = new FileArtifactGlobber()
 
     const inputs = new CoreInputs(globber, context)
+    const octoOptions = inputs.apiBaseUrl ? {baseUrl: inputs.apiBaseUrl} : {};
+    const git = github.getOctokit(token, octoOptions);
     const outputs = new CoreOutputs()
     const releases = new GithubReleases(inputs, git)
     const skipper = new ReleaseActionSkipper(inputs.skipIfReleaseExists, releases, inputs.tag)
